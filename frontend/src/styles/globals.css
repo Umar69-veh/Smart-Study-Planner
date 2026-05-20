@@ -1,0 +1,203 @@
+/* ===== DESIGN TOKENS ===== */
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-tertiary: #1a1a24;
+  --bg-elevated: #1e1e2a;
+  --bg-hover: #252533;
+
+  --accent-primary: #7c6af7;
+  --accent-secondary: #56cfb2;
+  --accent-warning: #f0a05a;
+  --accent-danger: #f06a6a;
+
+  --text-primary: #f0eeff;
+  --text-secondary: #a8a4c8;
+  --text-muted: #6b6880;
+  --text-inverse: #0a0a0f;
+
+  --border-subtle: rgba(124, 106, 247, 0.12);
+  --border-medium: rgba(124, 106, 247, 0.25);
+  --border-strong: rgba(124, 106, 247, 0.5);
+
+  --glow-primary: 0 0 30px rgba(124, 106, 247, 0.2);
+  --glow-secondary: 0 0 20px rgba(86, 207, 178, 0.15);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --sidebar-width: 280px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --bg-primary: #f5f4ff;
+  --bg-secondary: #ede9ff;
+  --bg-tertiary: #e4deff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #ede9ff;
+
+  --text-primary: #1a1530;
+  --text-secondary: #4a4270;
+  --text-muted: #8880aa;
+
+  --border-subtle: rgba(124, 106, 247, 0.15);
+  --border-medium: rgba(124, 106, 247, 0.3);
+  --border-strong: rgba(124, 106, 247, 0.6);
+
+  --glow-primary: 0 4px 20px rgba(124, 106, 247, 0.15);
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { height: 100%; }
+
+body {
+  height: 100%;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { height: 100%; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ===== CODE IN MARKDOWN ===== */
+.message-content code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: rgba(124, 106, 247, 0.12);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent-secondary);
+}
+
+.message-content pre {
+  background: #0d0d16;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.message-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: #c9d1d9;
+}
+
+.message-content p { margin-bottom: 10px; }
+.message-content p:last-child { margin-bottom: 0; }
+
+.message-content ul, .message-content ol {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.message-content li { margin-bottom: 4px; }
+
+.message-content strong {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.message-content h1, .message-content h2, .message-content h3 {
+  margin: 14px 0 8px;
+  font-family: var(--font-display);
+}
+
+.message-content blockquote {
+  border-left: 3px solid var(--accent-primary);
+  padding-left: 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.message-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.9em;
+}
+
+.message-content th, .message-content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+}
+
+.message-content th {
+  background: rgba(124, 106, 247, 0.1);
+  font-family: var(--font-display);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

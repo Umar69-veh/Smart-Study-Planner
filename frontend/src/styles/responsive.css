@@ -1,0 +1,55 @@
+/* Responsive helpers for StudyMind */
+
+/* Default: hide sidebar toggle on desktop */
+.sidebar-toggle {
+  display: none;
+}
+
+/* Sidebar off-canvas on small screens */
+@media (max-width: 900px) {
+  :root {
+    --sidebar-width: 280px;
+  }
+
+  /* Sidebar always off-canvas on mobile */
+  body {
+    overflow-x: hidden;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Keep overlay clickable */
+  .sidebar-overlay {
+    display: block !important;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 45;
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+
+  body.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  header {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+/* Ensure toggle never appears on wider screens */
+@media (min-width: 901px) {
+  .sidebar-toggle {
+    display: none !important;
+  }
+}
+
+
+
