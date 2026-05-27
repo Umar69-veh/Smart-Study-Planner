@@ -1,11 +1,17 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import { format } from "date-fns";
 
 export default function MessageBubble({ message, isLatest }) {
   const isUser = message.role === "user";
-  const timestamp = message.timestamp ? format(new Date(message.timestamp), "h:mm a") : "";
+
+  const timestamp = message.timestamp
+    ? format(new Date(message.timestamp), "h:mm a")
+    : "";
 
   return (
     <div
@@ -40,7 +46,7 @@ export default function MessageBubble({ message, isLatest }) {
 
       {/* Content */}
       <div style={{ maxWidth: "80%", minWidth: 0 }}>
-        {/* Name + time */}
+        {/* Name + Time */}
         <div
           style={{
             display: "flex",
@@ -55,37 +61,64 @@ export default function MessageBubble({ message, isLatest }) {
               fontSize: 11.5,
               fontFamily: "var(--font-display)",
               fontWeight: 600,
-              color: isUser ? "var(--accent-primary)" : "var(--accent-secondary)",
+              color: isUser
+                ? "var(--accent-primary)"
+                : "var(--accent-secondary)",
               letterSpacing: "0.02em",
             }}
           >
             {isUser ? "You" : "StudyMind"}
           </span>
-          <span style={{ fontSize: 10.5, color: "var(--text-muted)" }}>{timestamp}</span>
+
+          <span
+            style={{
+              fontSize: 10.5,
+              color: "var(--text-muted)",
+            }}
+          >
+            {timestamp}
+          </span>
         </div>
 
-        {/* Bubble */}
+        {/* Message Bubble */}
         <div
           style={{
             padding: "12px 16px",
-            borderRadius: isUser ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
+            borderRadius: isUser
+              ? "16px 4px 16px 16px"
+              : "4px 16px 16px 16px",
             background: isUser
               ? "linear-gradient(135deg, var(--accent-primary), #8a7af5)"
               : "var(--bg-elevated)",
-            border: isUser ? "none" : "1px solid var(--border-subtle)",
+            border: isUser
+              ? "none"
+              : "1px solid var(--border-subtle)",
             color: isUser ? "white" : "var(--text-primary)",
             fontSize: 14,
-            lineHeight: 1.65,
+            lineHeight: 1.7,
             boxShadow: isUser
               ? "0 4px 16px rgba(124, 106, 247, 0.25)"
               : "0 2px 8px rgba(0,0,0,0.2)",
+            overflowX: "auto",
           }}
         >
           {isUser ? (
-            <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{message.content}</p>
+            <p
+              style={{
+                margin: 0,
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              {message.content}
+            </p>
           ) : (
             <div className="message-content">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+              >
+                {message.content}
+              </ReactMarkdown>
             </div>
           )}
         </div>

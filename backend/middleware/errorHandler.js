@@ -1,15 +1,25 @@
 const errorHandler = (err, req, res, next) => {
-  console.error(`[${new Date().toISOString()}] Error: ${err.message}`);
-  console.error(err.stack);
+  const statusCode = err?.statusCode || err?.status || 500;
 
-  const statusCode = err.statusCode || 500;
+  // Try to capture the most useful error message shape
+  const message =
+    err?.message ||
+    err?.error ||
+    err?.response?.data?.error ||
+    err?.response?.data?.message ||
+    "Internal Server Error";
+
+  console.error(`[${new Date().toISOString()}] Error: ${message}`);
+  if (err?.stack) console.error(err.stack);
+  else console.error(err);
 
   res.status(statusCode).json({
     success: false,
-    error: err.message || "Internal Server Error",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    error: message,
+    ...(process.env.NODE_ENV === "development" && { stack: err?.stack }),
   });
 };
+
 
 const notFound = (req, res, next) => {
   const err = new Error(`Route not found: ${req.originalUrl}`);

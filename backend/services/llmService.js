@@ -1,28 +1,41 @@
 const Groq = require("groq-sdk");
 
-// Use environment variable when available. Falling back to hardcoded key is
-// not recommended for production — prefer setting GROQ_API_KEY in .env
+// Use environment variable when available
 const client = new Groq({
-  apiKey: process.env.GROQ_API_KEY || "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",
+  apiKey:
+    process.env.GROQ_API_KEY ||
+    "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",
 });
 
 const DIFFICULTY_INSTRUCTIONS = {
   simple: `Use very simple language. Explain like the student is 10 years old.
-    Avoid jargon. Use relatable analogies. Keep sentences short.
-    Always end with a fun fact or encouraging note.`,
+Avoid jargon. Use relatable analogies. Keep sentences short.
+Always end with a fun fact or encouraging note.`,
+
   medium: `Use clear, student-friendly language suitable for high school or early college.
-    Balance simplicity with accuracy. Use examples and analogies.
-    Introduce proper terminology but always explain it.`,
+Balance simplicity with accuracy. Use examples and analogies.
+Introduce proper terminology but always explain it.`,
+
   advanced: `Use precise academic language appropriate for upper-level college students.
-    Include technical depth, formal definitions, and theoretical underpinnings.`,
+Include technical depth, formal definitions, and theoretical underpinnings.`,
 };
 
 const TOPIC_CONTEXT = {
-  Mathematics: "Focus on mathematical rigor, proofs, formulas, and worked examples.",
-  "Computer Science": "Include code snippets in markdown where relevant. Explain algorithms step by step.",
-  Science: "Reference scientific principles, laws, and real-world applications.",
-  History: "Provide historical context, dates, key figures, and cause-effect relationships.",
-  Language: "Include grammar rules, examples, and usage in sentences.",
+  Mathematics:
+    "Focus on mathematical rigor, proofs, formulas, and worked examples.",
+
+  "Computer Science":
+    "Include code snippets in markdown where relevant. Explain algorithms step by step.",
+
+  Science:
+    "Reference scientific principles, laws, and real-world applications.",
+
+  History:
+    "Provide historical context, dates, key figures, and cause-effect relationships.",
+
+  Language:
+    "Include grammar rules, examples, and usage in sentences.",
+
   General: "",
   Other: "",
 };
@@ -43,7 +56,37 @@ CORE BEHAVIORS:
 3. Provide 1-2 concrete real-world examples per concept
 4. Format responses with clear structure using markdown
 5. End responses with a "💡 Quick Check" — a single question to verify understanding
-6. Be encouraging and positive.
+6. Be encouraging and positive
+
+IMPORTANT FORMATTING RULES:
+
+- Always write mathematics in proper LaTeX format.
+
+- Inline math must use single dollar signs:
+$x^2 + y^2$
+
+- Block equations must use double dollar signs:
+
+$$
+f(x)=x^2-4x+3
+$$
+
+- Never write equations like:
+[ equation ]
+or
+( equation )
+
+- Always use proper LaTeX commands:
+\\frac{}
+\\sqrt{}
+\\boxed{}
+\\infty
+\\sum
+\\pi
+
+- Make all equations human-readable and beautifully formatted.
+
+- Use markdown headings, bullet points, and tables when useful.
 
 SPECIAL COMMANDS:
 - "ELI5" → explain like I'm 5 years old
@@ -52,45 +95,58 @@ SPECIAL COMMANDS:
 - "give example" → provide additional real-world examples
 `;
 
-const callLLM = async (messages, difficulty = "medium", topic = "General") => {
+const callLLM = async (
+  messages,
+  difficulty = "medium",
+  topic = "General"
+) => {
   try {
     const formattedMessages = messages.map((msg) => ({
       role: msg.role,
       content: msg.content,
     }));
 
-    // Build request payload
     const params = {
       model: process.env.GROQ_MODEL || "openai/gpt-oss-20b",
-      max_tokens: 800, // limit length to avoid runaway generations
-      messages: [{ role: "system", content: SYSTEM_PROMPT(difficulty, topic) }, ...formattedMessages],
-      // You can tune temperature/top_p/stop sequences here if you want shorter, more focused answers
+
+      max_tokens: 800,
+
+      messages: [
+        {
+          role: "system",
+          content: SYSTEM_PROMPT(difficulty, topic),
+        },
+        ...formattedMessages,
+      ],
     };
 
-    // Provide a per-request timeout so the server fails fast instead of hanging indefinitely
-    const requestOptions = { timeout: 30 * 1000 }; // 30s
+    const requestOptions = {
+      timeout: 30 * 1000,
+    };
 
-    const response = await client.chat.completions.create(params, requestOptions);
+    const response = await client.chat.completions.create(
+      params,
+      requestOptions
+    );
 
-    // Robustly extract assistant text from various possible response shapes the SDK/API may return
     const extractContent = (res) => {
       if (!res) return null;
 
-      // Common shape: { choices: [ { message: { content: '...' } } ] }
       const c1 = res.choices?.[0]?.message?.content;
-      if (typeof c1 === "string" && c1.trim().length) return c1.trim();
+      if (typeof c1 === "string" && c1.trim().length)
+        return c1.trim();
 
-      // Alternative shape used by some responses: { output: [ { content: [ { text: '...' } ] } ] }
       const c2 = res.output?.[0]?.content?.[0]?.text;
-      if (typeof c2 === "string" && c2.trim()) return c2.trim();
+      if (typeof c2 === "string" && c2.trim())
+        return c2.trim();
 
-      // Another possible shape: { output: [ { text: '...' } ] }
       const c3 = res.output?.[0]?.text;
-      if (typeof c3 === "string" && c3.trim()) return c3.trim();
+      if (typeof c3 === "string" && c3.trim())
+        return c3.trim();
 
-      // Some SDKs return message directly
       const c4 = res.message?.content;
-      if (typeof c4 === "string" && c4.trim()) return c4.trim();
+      if (typeof c4 === "string" && c4.trim())
+        return c4.trim();
 
       return null;
     };
@@ -98,33 +154,63 @@ const callLLM = async (messages, difficulty = "medium", topic = "General") => {
     const assistantText = extractContent(response);
 
     if (!assistantText) {
-      console.error("Unexpected LLM response shape:", JSON.stringify(response, null, 2));
-      throw new Error("AI service returned an unexpected response. Check server logs for details.");
+      console.error(
+        "Unexpected LLM response shape:",
+        JSON.stringify(response, null, 2)
+      );
+
+      throw new Error(
+        "AI service returned an unexpected response."
+      );
     }
 
     return assistantText;
   } catch (error) {
     console.error("Groq API Error:", error?.message || error);
-    if (error.status === 401) throw new Error("Invalid Groq API key.");
-    if (error.status === 429) throw new Error("Rate limit exceeded. Try again in a moment.");
-    // Timeout or connection errors will surface here; propagate a clear message for frontend
-    throw new Error(`AI service error: ${error.message || String(error)}`);
+
+    if (error.status === 401)
+      throw new Error("Invalid Groq API key.");
+
+    if (error.status === 429)
+      throw new Error(
+        "Rate limit exceeded. Try again in a moment."
+      );
+
+    throw new Error(
+      `AI service error: ${error.message || String(error)}`
+    );
   }
 };
 
-const generateQuiz = async (topic, difficulty = "medium") => {
-  const prompt = `Generate a quiz with 5 multiple choice questions about: "${topic}".
-  Format each question as:
-  **Q[n]. [Question text]**
-  A) [Option]
-  B) [Option]
-  C) [Option]
-  D) [Option]
-  Answer: [Letter]) [Brief explanation]
-  
-  Make questions ${difficulty} difficulty level.`;
+const generateQuiz = async (
+  topic,
+  difficulty = "medium"
+) => {
+  const prompt = `
+Generate a quiz with 5 multiple choice questions about:
+"${topic}"
 
-  return await callLLM([{ role: "user", content: prompt }], difficulty, "General");
+Format each question as:
+
+**Q[n]. [Question text]**
+A) [Option]
+B) [Option]
+C) [Option]
+D) [Option]
+
+Answer: [Letter]) [Brief explanation]
+
+Make questions ${difficulty} difficulty level.
+`;
+
+  return await callLLM(
+    [{ role: "user", content: prompt }],
+    difficulty,
+    "General"
+  );
 };
 
-module.exports = { callLLM, generateQuiz };
+module.exports = {
+  callLLM,
+  generateQuiz,
+};

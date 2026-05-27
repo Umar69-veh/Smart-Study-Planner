@@ -1,10 +1,8 @@
 # TODO
-- [x] Implement responsive/off-canvas sidebar
-- [x] Add mobile header hamburger button and connect to existing `sidebarOpen` state
-- [x] Add responsive CSS breakpoints (media queries) to ensure layout works on small screens
-- [x] Verify message area + input sizing on mobile
-- [x] Run frontend dev server and sanity-check resizing
 
-
-
+- [ ] Identify the exact runtime error (paste backend/terminal log or browser console error text + stack).
+- [x] Improve backend error handler to always return the real error message (errorHandler.js).
+- [ ] Re-run backend/frontend and confirm frontend now shows the real backend error.
+- [ ] If error is from Groq/LLM, patch llmService.js request/response handling accordingly.
+- [ ] If error is from DB/model, patch routes or ChatSession schema accordingly.
 
