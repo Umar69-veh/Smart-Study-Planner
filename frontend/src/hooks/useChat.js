@@ -18,7 +18,8 @@ export const useChat = () => {
       const res = await getSessions();
       setSessions(res.data || []);
     } catch (err) {
-      console.error("Failed to load sessions:", err.message);
+      console.error("Failed to load sessions:", err);
+      setError(err?.message || String(err));
     }
   }, []);
 
@@ -32,7 +33,8 @@ export const useChat = () => {
       setSessionTitle(session.title || "Chat");
       setError(null);
     } catch (err) {
-      setError(err.message);
+      console.error("Failed to load session:", err);
+      setError(err?.message || String(err));
     }
   }, []);
 
@@ -81,7 +83,8 @@ export const useChat = () => {
           if (title) setSessionTitle(title);
         }
       } catch (err) {
-        setError(err.message);
+        console.error("Send chat error:", err);
+        setError(err?.message || String(err));
         // Remove the optimistic user message on error
         setMessages((prev) => prev.slice(0, -1));
       } finally {
@@ -100,7 +103,8 @@ export const useChat = () => {
           startNewChat();
         }
       } catch (err) {
-        setError(err.message);
+        console.error("Remove session error:", err);
+        setError(err?.message || String(err));
       }
     },
     [activeSessionId, startNewChat]
