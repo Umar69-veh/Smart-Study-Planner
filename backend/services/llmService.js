@@ -1,11 +1,13 @@
 const Groq = require("groq-sdk");
 
-// Use environment variable when available
-const client = new Groq({
-  apiKey:
-    process.env.GROQ_API_KEY ||
-    "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",
-});
+// Use environment variable when available. Do NOT hardcode secrets in source.
+if (!process.env.GROQ_API_KEY) {
+  console.warn(
+    "GROQ_API_KEY is not set. Set GROQ_API_KEY in your environment or backend/.env for local development."
+  );
+}
+
+const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const DIFFICULTY_INSTRUCTIONS = {
   simple: `Use very simple language. Explain like the student is 10 years old.
