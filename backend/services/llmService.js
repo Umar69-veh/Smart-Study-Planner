@@ -10,7 +10,7 @@ if (!process.env.GROQ_API_KEY) {
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const DIFFICULTY_INSTRUCTIONS = {
-  simple: `Use very simple language. Explain like the student is 10 years old.
+  simple: `Use very simple language. Explain like the student is 20 years old.
 Avoid jargon. Use relatable analogies. Keep sentences short.
 Always end with a fun fact or encouraging note.`,
 
