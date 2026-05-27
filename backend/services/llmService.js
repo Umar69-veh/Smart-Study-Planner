@@ -57,6 +57,9 @@ CORE BEHAVIORS:
 2. Use the Feynman technique: break complex ideas into simple building blocks
 3. Provide 1-2 concrete real-world examples per concept
 4. Format responses with clear structure using markdown
+  4.a Avoid using markdown tables for main content. Prefer headings, short
+      paragraphs, and bullet/numbered lists to present important points.
+      Only use tables when the user explicitly asks for tabular data.
 5. End responses with a "💡 Quick Check" — a single question to verify understanding
 6. Be encouraging and positive
 
@@ -166,7 +169,36 @@ const callLLM = async (
       );
     }
 
-    return assistantText;
+      // Post-process: convert simple markdown tables into headings + bullet lists
+      const tableToList = (text) => {
+        // Detect a markdown table (header line with | and a separator --- line)
+        const tableRegex = /(^|\n)(\|?.+\|.+\n)\|?\s*[-:]+\s*\|[-| :]+\n([\s\S]*?)(?=\n\S|$)/gm;
+        return text.replace(tableRegex, (match) => {
+          try {
+            const lines = match.trim().split('\n').filter(Boolean);
+            if (lines.length < 2) return match;
+
+            // header is first, separator second, rest are rows
+            const header = lines[0].replace(/^\|/, '').replace(/\|$/, '').split('|').map(h => h.trim());
+            const rows = lines.slice(2).map(r => r.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim()));
+
+            // Build a readable bullet-list representation
+            const parts = [];
+            rows.forEach((row) => {
+              const items = row.map((cell, i) => `**${header[i] || 'Field'}:** ${cell}`).join('  \n');
+              parts.push(`- ${items}`);
+            });
+
+            return '\n' + parts.join('\n') + '\n';
+          } catch (e) {
+            return match; // if anything goes wrong, keep original
+          }
+        });
+      };
+
+      const finalText = tableToList(assistantText);
+
+      return finalText;
   } catch (error) {
     console.error("Groq API Error:", error?.message || error);
 
