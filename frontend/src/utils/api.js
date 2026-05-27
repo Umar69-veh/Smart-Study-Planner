@@ -1,7 +1,9 @@
 import axios from "axios";
 import API_URL from "../config/api";
 
-const baseURL = API_URL ? `${API_URL}/api` : "/api";
+// If API_URL is set use it as the full origin (no trailing /api appended here so we can
+// reuse endpoint paths like '/chat'). For local dev, fallback to relative '/api'.
+const baseURL = API_URL || "/api";
 
 const api = axios.create({
   baseURL,
