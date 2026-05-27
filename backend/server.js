@@ -12,14 +12,20 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middleware
+// Allow frontend origins (local dev and Vercel production) and enable credentials
 app.use(
   cors({
-    origin: process.env.NODE_ENV === "production" ? process.env.FRONTEND_URL : "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: [
+      "http://localhost:5173",
+      "https://smart-study-planner-nine-phi.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+// JSON body parsing (placed after CORS so CORS headers are set on errors too)
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
