@@ -27,6 +27,18 @@ const createAxios = () => {
 };
 
 const api = createAxios();
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("ssp_auth_token");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const TOKEN_KEY = "ssp_auth_token";
 
