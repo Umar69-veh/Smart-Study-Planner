@@ -3,9 +3,11 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const ChatSession = require("../models/ChatSession");
 const { callLLM, generateQuiz } = require("../services/llmService");
+const authMiddleware = require("../middleware/authMiddleware");
+
 
 // POST /api/chat — Send a message and get AI response
-router.post("/", async (req, res, next) => {
+router.post("/", authMiddleware, async (req, res, next) => {
   try {
     const { message, sessionId, difficulty = "medium", topic = "General" } = req.body;
 
@@ -32,18 +34,20 @@ router.post("/", async (req, res, next) => {
     const activeSessionId = sessionId || uuidv4();
 
     if (sessionId) {
-      session = await ChatSession.findOne({ sessionId });
+      session = await ChatSession.findOne({ sessionId, userId: req.user.id });
       if (!session) {
         return res.status(404).json({ success: false, error: "Chat session not found." });
       }
     } else {
       session = new ChatSession({
+        userId: req.user.id,
         sessionId: activeSessionId,
         difficulty,
         topic,
         messages: [],
       });
     }
+
 
     // Add user message to history
     session.messages.push({ role: "user", content: message.trim() });
@@ -83,10 +87,10 @@ router.post("/", async (req, res, next) => {
 });
 
 // GET /api/chat/sessions — Get all chat sessions (summary list)
-router.get("/sessions", async (req, res, next) => {
+router.get("/sessions", authMiddleware, async (req, res, next) => {
   try {
     const sessions = await ChatSession.find(
-      {},
+      { userId: req.user.id },
       { sessionId: 1, title: 1, topic: 1, difficulty: 1, messageCount: 1, updatedAt: 1 }
     )
       .sort({ updatedAt: -1 })
@@ -99,9 +103,9 @@ router.get("/sessions", async (req, res, next) => {
 });
 
 // GET /api/chat/sessions/:sessionId — Get full chat history for a session
-router.get("/sessions/:sessionId", async (req, res, next) => {
+router.get("/sessions/:sessionId", authMiddleware, async (req, res, next) => {
   try {
-    const session = await ChatSession.findOne({ sessionId: req.params.sessionId });
+    const session = await ChatSession.findOne({ sessionId: req.params.sessionId, userId: req.user.id });
 
     if (!session) {
       return res.status(404).json({ success: false, error: "Session not found." });
@@ -114,9 +118,9 @@ router.get("/sessions/:sessionId", async (req, res, next) => {
 });
 
 // DELETE /api/chat/sessions/:sessionId — Delete a session
-router.delete("/sessions/:sessionId", async (req, res, next) => {
+router.delete("/sessions/:sessionId", authMiddleware, async (req, res, next) => {
   try {
-    const session = await ChatSession.findOneAndDelete({ sessionId: req.params.sessionId });
+    const session = await ChatSession.findOneAndDelete({ sessionId: req.params.sessionId, userId: req.user.id });
 
     if (!session) {
       return res.status(404).json({ success: false, error: "Session not found." });
@@ -129,7 +133,7 @@ router.delete("/sessions/:sessionId", async (req, res, next) => {
 });
 
 // POST /api/chat/quiz — Generate a quiz on a topic
-router.post("/quiz", async (req, res, next) => {
+router.post("/quiz", authMiddleware, async (req, res, next) => {
   try {
     const { topic, difficulty = "medium" } = req.body;
 
@@ -146,7 +150,7 @@ router.post("/quiz", async (req, res, next) => {
 });
 
 // PATCH /api/chat/sessions/:sessionId/settings — Update session difficulty/topic
-router.patch("/sessions/:sessionId/settings", async (req, res, next) => {
+router.patch("/sessions/:sessionId/settings", authMiddleware, async (req, res, next) => {
   try {
     const { difficulty, topic } = req.body;
     const updateData = {};
@@ -155,7 +159,7 @@ router.patch("/sessions/:sessionId/settings", async (req, res, next) => {
     if (topic) updateData.topic = topic;
 
     const session = await ChatSession.findOneAndUpdate(
-      { sessionId: req.params.sessionId },
+      { sessionId: req.params.sessionId, userId: req.user.id },
       updateData,
       { new: true }
     );

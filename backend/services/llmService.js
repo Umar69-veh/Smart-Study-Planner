@@ -89,10 +89,43 @@ RESPONSE LENGTH RULES:
 
 const callLLM = async (messages, difficulty = "medium", topic = "General") => {
   try {
-    const formattedMessages = messages.map((msg) => ({
-      role: msg.role,
-      content: msg.content,
+    const safeMessages = Array.isArray(messages) ? messages : [];
+
+    const formattedMessages = safeMessages.map((msg) => ({
+      role: msg?.role,
+      content: msg?.content,
     }));
+
+    // Debug + repair: OpenAI-compatible tool-calling protocol requires
+    // any { role: "tool" } message to follow an assistant message containing { tool_calls }.
+    // Providers can be strict; if we find orphaned tool messages, log them and remove them.
+    const repairedMessages = [...formattedMessages];
+    for (let i = 0; i < repairedMessages.length; i++) {
+
+      const m = repairedMessages[i];
+      if (m?.role === "tool") {
+        // Find nearest preceding assistant message
+        let j = i - 1;
+        while (j >= 0 && repairedMessages[j]?.role !== "assistant") j--;
+
+        const prevAssistant = j >= 0 ? repairedMessages[j] : null;
+        const prevHasToolCalls = !!prevAssistant?.tool_calls;
+
+        if (!prevHasToolCalls) {
+          console.error("[LLM Tool Protocol] Orphaned tool message detected:", {
+            toolIndex: i,
+            toolMessage: repairedMessages[i],
+            precedingAssistant: prevAssistant,
+            conversation: repairedMessages,
+          });
+
+          // Remove orphaned tool message
+          repairedMessages.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
 
     const params = {
       model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",

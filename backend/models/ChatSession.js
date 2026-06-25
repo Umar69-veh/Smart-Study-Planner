@@ -18,10 +18,14 @@ const messageSchema = new mongoose.Schema({
 
 const chatSessionSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      index: true,
+    },
     sessionId: {
       type: String,
       required: true,
-      unique: true,
       index: true,
     },
     title: {
@@ -59,4 +63,8 @@ chatSessionSchema.pre("save", function (next) {
   next();
 });
 
+// Ensure a user cannot accidentally collide sessionIds across users
+chatSessionSchema.index({ userId: 1, sessionId: 1 }, { unique: true });
+
 module.exports = mongoose.model("ChatSession", chatSessionSchema);
+

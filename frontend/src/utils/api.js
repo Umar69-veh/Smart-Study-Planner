@@ -20,11 +20,15 @@ const resolveApiOrigin = () => {
   return ""; // empty means use relative URLs ('/api/...')
 };
 
-const createAxios = () => {
+const createAxios = (authToken) => {
   const origin = resolveApiOrigin();
   const baseURL = origin ? `${origin}/api` : "/api";
 
   const instance = axios.create({
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
     baseURL,
     timeout: 60000,
     headers: { "Content-Type": "application/json" },
@@ -43,13 +47,14 @@ const createAxios = () => {
   return instance;
 };
 
-export const sendMessage = (payload) => createAxios().post("/chat", payload);
-export const getSessions = () => createAxios().get("/chat/sessions");
-export const getSession = (sessionId) => createAxios().get(`/chat/sessions/${sessionId}`);
-export const deleteSession = (sessionId) => createAxios().delete(`/chat/sessions/${sessionId}`);
-export const generateQuiz = (topic, difficulty) =>
-  createAxios().post("/chat/quiz", { topic, difficulty });
-export const updateSettings = (sessionId, settings) =>
-  createAxios().patch(`/chat/sessions/${sessionId}/settings`, settings);
+export const sendMessage = (payload, token) => createAxios(token).post("/chat", payload);
+export const getSessions = (token) => createAxios(token).get("/chat/sessions");
+export const getSession = (sessionId, token) => createAxios(token).get(`/chat/sessions/${sessionId}`);
+export const deleteSession = (sessionId, token) => createAxios(token).delete(`/chat/sessions/${sessionId}`);
+export const generateQuiz = (topic, difficulty, token) =>
+  createAxios(token).post("/chat/quiz", { topic, difficulty });
+export const updateSettings = (sessionId, settings, token) =>
+  createAxios(token).patch(`/chat/sessions/${sessionId}/settings`, settings);
 
-export default createAxios();
+export default createAxios;
+

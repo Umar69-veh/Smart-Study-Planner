@@ -1,8 +1,9 @@
 import { useState, useCallback, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { sendMessage, getSessions, getSession, deleteSession } from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 
 export const useChat = () => {
+  const { token, logout, setAuthError } = useAuth();
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -14,8 +15,9 @@ export const useChat = () => {
   const abortRef = useRef(null);
 
   const loadSessions = useCallback(async () => {
+    if (!token) return;
     try {
-      const res = await getSessions();
+      const res = await getSessions(token);
       setSessions(res.data || []);
     } catch (err) {
       console.error("Failed to load sessions:", err);
@@ -24,8 +26,9 @@ export const useChat = () => {
   }, []);
 
   const loadSession = useCallback(async (sessionId) => {
+    if (!token) return;
     try {
-      const res = await getSession(sessionId);
+      const res = await getSession(sessionId, token);
       const session = res.data;
       setActiveSessionId(sessionId);
       setMessages(session.messages || []);
@@ -62,7 +65,7 @@ export const useChat = () => {
           topic: settings.topic,
         };
 
-        const res = await sendMessage(payload);
+        const res = await sendMessage(payload, token);
         const { sessionId: newSessionId, response, title } = res.data;
 
         const botMessage = {
@@ -97,7 +100,7 @@ export const useChat = () => {
   const removeSession = useCallback(
     async (sessionId) => {
       try {
-        await deleteSession(sessionId);
+        await deleteSession(sessionId, token);
         setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
         if (activeSessionId === sessionId) {
           startNewChat();

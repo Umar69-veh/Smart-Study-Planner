@@ -7,29 +7,16 @@
 [33m[nodemon] watching path(s): *.*[39m
 [33m[nodemon] watching extensions: js,mjs,cjs,json[39m
 [32m[nodemon] starting `node server.js`[39m
-(node:5315) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:5315) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
 🚀 Server running on http://localhost:5000
 📚 Study Helper API ready
 🌍 Environment: development
-✅ MongoDB connected: localhost
+✅ MongoDB connected: ac-8wklngo-shard-00-00.mpziykc.mongodb.net
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
 [32m[nodemon] restarting child process[39m
 [32m[nodemon] starting `node server.js`[39m
-(node:6499) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:6499) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
 🚀 Server running on http://localhost:5000
 📚 Study Helper API ready
 🌍 Environment: development
-✅ MongoDB connected: localhost
-[2026-05-19T17:20:10.756Z] GET /api/chat/sessions
-[2026-05-19T17:20:10.817Z] GET /api/chat/sessions
-[2026-05-19T17:20:12.936Z] POST /api/chat
-[2026-05-19T17:20:14.307Z] GET /api/chat/sessions
-[2026-05-19T17:20:19.507Z] GET /api/chat/sessions/3a2ae997-7163-4603-b18f-81016625156d
-[2026-05-19T17:20:24.709Z] GET /api/chat/sessions/d3a4e7bb-b6d3-4d02-ac85-d787c26f025c
-[2026-05-19T17:20:28.766Z] POST /api/chat
-[2026-05-19T17:23:32.545Z] POST /api/chat
-[2026-05-19T17:23:46.089Z] GET /api/chat/sessions
+❌ MongoDB connection error: Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m

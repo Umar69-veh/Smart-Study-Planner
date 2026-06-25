@@ -9,7 +9,14 @@ import { useChat } from "./hooks/useChat";
 import "./styles/globals.css";
 import "./styles/responsive.css";
 
-export default function App() {
+import { AuthProvider as AuthContextProvider, useAuth } from "./context/AuthContext";
+import WelcomePage from "./components/WelcomePage";
+import LoginPage from "./components/LoginPage";
+import SignupPage from "./components/SignupPage";
+
+function AppInner() {
+  const { user, logout, authLoading, login, signup } = useAuth();
+
   const {
     sessions,
     activeSessionId,
@@ -30,6 +37,7 @@ export default function App() {
   const messagesEndRef = useRef(null);
   const [theme, setTheme] = useState("dark");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [authView, setAuthView] = useState("welcome");
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -37,7 +45,6 @@ export default function App() {
   }, [messages, isLoading]);
 
   useEffect(() => {
-    // Used by responsive.css to slide sidebar in/out on mobile.
     if (sidebarOpen) document.body.classList.add("sidebar-open");
     else document.body.classList.remove("sidebar-open");
 
@@ -49,6 +56,47 @@ export default function App() {
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
   };
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (user) return;
+    setAuthView("welcome");
+  }, [authLoading, user]);
+
+  if (authLoading) {
+    return <div style={{ minHeight: "100%", padding: 24 }}>Loading...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div style={{ height: "100%" }}>
+        {authView === "welcome" && (
+          <WelcomePage
+            onLogin={() => setAuthView("login")}
+            onSignup={() => setAuthView("signup")}
+          />
+        )}
+
+        {authView === "login" && (
+          <LoginPage
+            error={error}
+            onLogin={async ({ email, password, rememberMe }) =>
+              login({ email, password, rememberMe })
+            }
+            onSwitchToSignup={() => setAuthView("signup")}
+          />
+        )}
+
+        {authView === "signup" && (
+          <SignupPage
+            error={error}
+            onSignup={async (payload) => signup(payload)}
+            onSwitchToLogin={() => setAuthView("login")}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -64,10 +112,12 @@ export default function App() {
       <div
         style={{
           position: "fixed",
-          width: 400, height: 400,
+          width: 400,
+          height: 400,
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(124,106,247,0.06) 0%, transparent 70%)",
-          top: -100, right: -100,
+          top: -100,
+          right: -100,
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -75,16 +125,17 @@ export default function App() {
       <div
         style={{
           position: "fixed",
-          width: 300, height: 300,
+          width: 300,
+          height: 300,
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(86,207,178,0.05) 0%, transparent 70%)",
-          bottom: 0, left: 200,
+          bottom: 0,
+          left: 200,
           pointerEvents: "none",
           zIndex: 0,
         }}
       />
 
-      {/* Sidebar */}
       <Sidebar
         sessions={sessions}
         activeSessionId={activeSessionId}
@@ -96,7 +147,6 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
       />
 
-      {/* Main area */}
       <div
         style={{
           flex: 1,
@@ -108,7 +158,6 @@ export default function App() {
           zIndex: 1,
         }}
       >
-        {/* Topbar */}
         <header
           style={{
             padding: "0 16px",
@@ -137,6 +186,11 @@ export default function App() {
             >
               {sessionTitle}
             </h2>
+
+            <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+              Hi, {user.firstName}
+            </span>
+
             {activeSessionId && (
               <span
                 style={{
@@ -165,6 +219,7 @@ export default function App() {
             >
               ☰
             </button>
+
             <button
               onClick={toggleTheme}
               style={iconBtnStyle}
@@ -172,17 +227,23 @@ export default function App() {
             >
               {theme === "dark" ? "☀️" : "🌙"}
             </button>
+
+            <button
+              onClick={logout}
+              style={{ ...iconBtnStyle, width: 76 }}
+              title="Logout"
+            >
+              Logout
+            </button>
           </div>
         </header>
 
-        {/* Settings bar */}
         <SettingsBar
           settings={settings}
           onUpdate={updateSettings}
           disabled={isLoading}
         />
 
-        {/* Error banner */}
         {error && (
           <div
             style={{
@@ -200,8 +261,11 @@ export default function App() {
             <button
               onClick={() => setError(null)}
               style={{
-                background: "none", border: "none",
-                color: "#f06a6a", cursor: "pointer", fontSize: 16,
+                background: "none",
+                border: "none",
+                color: "#f06a6a",
+                cursor: "pointer",
+                fontSize: 16,
               }}
             >
               ✕
@@ -209,7 +273,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Messages area */}
         <div
           style={{
             flex: 1,
@@ -235,7 +298,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Input */}
         <ChatInput
           onSend={sendChat}
           isLoading={isLoading}
@@ -247,12 +309,24 @@ export default function App() {
 }
 
 const iconBtnStyle = {
-  width: 32, height: 32,
+  width: 32,
+  height: 32,
   background: "var(--bg-tertiary)",
   border: "1px solid var(--border-subtle)",
   borderRadius: 8,
   cursor: "pointer",
-  display: "flex", alignItems: "center", justifyContent: "center",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   fontSize: 14,
   transition: "var(--transition)",
 };
+
+export default function App() {
+  return (
+    <AuthContextProvider>
+      <AppInner />
+    </AuthContextProvider>
+  );
+}
+

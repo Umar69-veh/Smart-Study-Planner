@@ -3,7 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const chatRoutes = require("./routes/chat");
+const authRoutes = require("./routes/auth");
 const { errorHandler, notFound } = require("./middleware/errorHandler");
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,7 +23,8 @@ app.use(
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+allowedHeaders: ["Content-Type", "Authorization"],
+
   })
 );
 
@@ -47,7 +50,9 @@ app.get("/health", (req, res) => {
 });
 
 // API Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
+
 
 // 404 & Error handlers
 app.use(notFound);
