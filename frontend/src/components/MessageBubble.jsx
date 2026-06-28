@@ -93,7 +93,7 @@ export default function MessageBubble({ message, isLatest }) {
             border: isUser
               ? "none"
               : "1px solid var(--border-subtle)",
-            color: isUser ? "white" : "var(--text-primary)",
+            color: isUser ? "var(--text-inverse)" : "var(--text-primary)",
             fontSize: 14,
             lineHeight: 1.7,
             boxShadow: isUser

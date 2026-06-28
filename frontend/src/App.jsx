@@ -54,8 +54,8 @@ function AppInner() {
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
   };
+
 
   useEffect(() => {
     if (authLoading) return;
@@ -69,7 +69,15 @@ function AppInner() {
 
   if (!user) {
     return (
-      <div style={{ height: "100%" }}>
+      <div
+        data-app-theme={theme}
+        style={{
+          height: "100%",
+          minHeight: "100vh",
+          display: "flex",
+          background: "var(--bg-primary)",
+        }}
+      >
         {authView === "welcome" && (
           <WelcomePage
             onLogin={() => setAuthView("login")}
@@ -98,8 +106,10 @@ function AppInner() {
     );
   }
 
+
   return (
     <div
+      data-app-theme={theme}
       style={{
         height: "100%",
         display: "flex",
@@ -108,6 +118,7 @@ function AppInner() {
         overflow: "hidden",
       }}
     >
+
       {/* Ambient background blobs */}
       <div
         style={{
@@ -257,13 +268,13 @@ function AppInner() {
             }}
           >
             <span style={{ fontSize: 14 }}>⚠️</span>
-            <p style={{ fontSize: 13, color: "#f06a6a", flex: 1 }}>{error}</p>
+              <p style={{ fontSize: 13, color: "var(--accent-danger)", flex: 1 }}>{error}</p>
             <button
               onClick={() => setError(null)}
               style={{
                 background: "none",
                 border: "none",
-                color: "#f06a6a",
+                color: "var(--accent-danger)",
                 cursor: "pointer",
                 fontSize: 16,
               }}

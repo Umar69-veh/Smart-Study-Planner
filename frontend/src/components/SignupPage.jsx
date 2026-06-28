@@ -26,14 +26,14 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
 
   const emailOk = useMemo(
     () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()),
-    [email]
+    [email],
   );
 
   const pwOk = useMemo(() => password.trim().length > 0, [password]);
 
   const confirmOk = useMemo(
     () => confirmPassword && confirmPassword === password,
-    [confirmPassword, password]
+    [confirmPassword, password],
   );
 
   const submit = async () => {
@@ -43,7 +43,8 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
     if (!lastName.trim()) return setLocalError("Last name is required.");
     if (!emailOk) return setLocalError("Enter a valid email address.");
     if (!pwOk) return setLocalError("Password cannot be empty.");
-    if (!confirmOk) return setLocalError("Confirm password must match password.");
+    if (!confirmOk)
+      return setLocalError("Confirm password must match password.");
 
     try {
       setLoading(true);
@@ -67,9 +68,10 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f8fafc",
+        background: "#FFFFFF",
         display: "flex",
         flexDirection: "column",
+        width: "100%",
       }}
     >
       {/* ================= NAVBAR ================= */}
@@ -77,12 +79,14 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
       <header
         style={{
           height: 74,
-          background: "#ffffff",
-          borderBottom: "1px solid #e5e7eb",
+          background: "#FFFFFF",
+          borderBottom: "1px solid #D1D5DB",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "0 60px",
+          width: "100%",
+          flexShrink: 0,
         }}
       >
         <div
@@ -115,7 +119,7 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
                 fontSize: 22,
                 fontWeight: 600,
                 color: "#111827",
-                fontFamily: "var(--font-display)",
+                fontFamily: "inherit",
               }}
             >
               Smart Study Planner
@@ -136,8 +140,10 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
           <button
             onClick={onSwitchToLogin}
             style={{
-              background: "#ffffff",
+              background: "#FFFFFF",
+
               color: "#111827",
+
               border: "1px solid #e5e7eb",
               padding: "12px 22px",
               borderRadius: 14,
@@ -171,18 +177,22 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
       <div
         style={{
           flex: 1,
+          width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           padding: 40,
+          minHeight: "calc(100vh - 74px)",
+          background: "#FFFFFF",
         }}
       >
         <div
           style={{
             width: "100%",
             maxWidth: 450,
-            background: "#ffffff",
+            background: "#FFFFFF",
             borderRadius: 24,
+
             padding: 35,
             boxShadow: "0 15px 40px rgba(0,0,0,.08)",
           }}
@@ -199,7 +209,7 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
 
           <p
             style={{
-              color: "#6b7280",
+              color: "#9CA3AF",
               marginBottom: 30,
             }}
           >
@@ -209,8 +219,8 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
           {(error || localError) && (
             <div
               style={{
-                background: "#FEE2E2",
-                color: "#DC2626",
+                background: "rgba(240, 106, 106, 0.12)",
+                color: "#f06a6a",
                 padding: "12px",
                 borderRadius: 12,
                 marginBottom: 20,
@@ -236,7 +246,7 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
                 style={{
                   display: "block",
                   marginBottom: 8,
-                  color: "#374151",
+                  color: "#fff",
                   fontWeight: 600,
                 }}
               >
@@ -262,7 +272,7 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
                 style={{
                   display: "block",
                   marginBottom: 8,
-                  color: "#374151",
+                  color: "#fff",
                   fontWeight: 600,
                 }}
               >
@@ -351,7 +361,8 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
                   width: 70,
                   borderRadius: 14,
                   border: "1px solid #D1D5DB",
-                  background: "#fff",
+                  background: "#FFFFFF",
+
                   cursor: "pointer",
                 }}
               >
@@ -433,8 +444,7 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
               color: "#fff",
               fontWeight: 700,
               fontSize: 16,
-              background:
-                "linear-gradient(90deg,#23427C,#34C38F)",
+              background: "linear-gradient(90deg,#23427C,#34C38F)",
             }}
           >
             {loading ? "Creating..." : "Sign Up"}
@@ -471,47 +481,4 @@ export default function SignupPage({ onSignup, onSwitchToLogin, error }) {
   );
 }
 
-
-
-const labelStyle = {
-  fontSize: 12.5,
-  color: "var(--text-secondary)",
-  fontFamily: "var(--font-display)",
-  fontWeight: 800,
-};
-
-const inputStyle = {
-  width: "100%",
-  background: "var(--bg-elevated)",
-  border: "1px solid var(--border-subtle)",
-  borderRadius: 16,
-  padding: "11px 12px",
-  outline: "none",
-  color: "var(--text-primary)",
-  fontFamily: "var(--font-body)",
-  fontSize: 14,
-};
-
-const smallBtnStyle = {
-  width: 74,
-  padding: "10px 10px",
-  borderRadius: 14,
-  border: "1px solid var(--border-subtle)",
-  background: "var(--bg-tertiary)",
-  color: "var(--text-secondary)",
-  cursor: "pointer",
-  fontFamily: "var(--font-display)",
-  fontWeight: 800,
-};
-
-const socialBtnStyle = {
-  padding: "11px 14px",
-  borderRadius: 18,
-  border: "1px solid var(--border-subtle)",
-  background: "var(--bg-elevated)",
-  color: "var(--text-primary)",
-  cursor: "not-allowed",
-  fontFamily: "var(--font-display)",
-  fontWeight: 900,
-};
 

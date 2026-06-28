@@ -28,7 +28,8 @@ export default function WelcomeScreen({ onSend }) {
           width: 72,
           height: 72,
           borderRadius: 20,
-          background: "#ffffff",
+          background: "var(--bg-primary)",
+
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

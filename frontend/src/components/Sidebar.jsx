@@ -87,10 +87,10 @@ export default function Sidebar({
             style={{
               width: "100%",
               padding: "9px 14px",
-              background: "linear-gradient(90deg,#23427C,#34C38F)",
+            background: "linear-gradient(90deg,#23427C,#34C38F)",
               border: "none",
               borderRadius: "var(--radius-md)",
-              color: "white",
+              color: "var(--text-inverse)",
               font: "600 13px var(--font-display)",
               cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 6,

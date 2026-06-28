@@ -13,22 +13,26 @@ export default function WelcomePage({ onLogin, onSignup, onSend }) {
   return (
     <div
       style={{
-        minHeight: "100%",
-        background: "#ffffff",
+        minHeight: "calc(100vh - 74px)",
+        background: "var(--bg-primary)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: "48px 20px",
+        width: "100%",
       }}
+
     >
       <div
         style={{
           width: "100%",
           maxWidth: 980,
+          margin: "0 auto",
           display: "grid",
           gridTemplateColumns: "1.1fr 0.9fr",
           gap: 24,
           alignItems: "center",
+          justifyContent: "center",
         }}
         className="welcome-grid"
       >

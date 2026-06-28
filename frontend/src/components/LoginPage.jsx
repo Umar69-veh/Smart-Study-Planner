@@ -38,9 +38,10 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f8fafc",
+        background: "var(--bg-primary)",
         display: "flex",
         flexDirection: "column",
+        width: "100%",
       }}
     >
       {/* ================= NAVBAR ================= */}
@@ -48,12 +49,14 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
       <header
         style={{
           height: 74,
-          background: "#ffffff",
+          background: "var(--bg-primary)",
           borderBottom: "1px solid #e5e7eb",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "0 60px",
+          width: "100%",
+          flexShrink: 0,
         }}
       >
         <div
@@ -125,19 +128,23 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
       <div
         style={{
           flex: 1,
+          width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           padding: 40,
+          minHeight: "calc(100vh - 74px)",
         }}
       >
+
         <div
           style={{
             width: "100%",
             maxWidth: 450,
-            background: "#ffffff",
+            background: "var(--bg-primary)",
             borderRadius: 24,
             padding: 35,
+
             boxShadow: "0 15px 40px rgba(0,0,0,.08)",
           }}
         >
@@ -159,11 +166,12 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
             }}
           >
             Sign in to continue using Smart Study Planner
-          </p>          {(error || localError) && (
+          </p>
+          {(error || localError) && (
             <div
               style={{
-                background: "#FEE2E2",
-                color: "#DC2626",
+                background: "rgba(240, 106, 106, 0.12)",
+                color: "#f06a6a",
                 padding: "12px",
                 borderRadius: 12,
                 marginBottom: 20,
@@ -181,8 +189,8 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
               style={{
                 display: "block",
                 marginBottom: 8,
-                color: "#374151",
-                fontWeight: 600,
+              color: "#374151",
+              fontWeight: 600,
               }}
             >
               Email Address
@@ -193,13 +201,24 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Example@gmail.com"
-              style={{
+            style={{
                 width: "100%",
                 padding: "14px",
                 borderRadius: 14,
                 border: "1px solid #D1D5DB",
                 outline: "none",
                 fontSize: 15,
+                background: "var(--bg-primary)",
+                color: "#111827",
+              }}
+
+              onFocus={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(124, 106, 247, 0.15)";
+                e.currentTarget.style.borderColor = "#7c6af7";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.borderColor = "#D1D5DB";
               }}
             />
           </div>
@@ -211,7 +230,7 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
               style={{
                 display: "block",
                 marginBottom: 8,
-                color: "#374151",
+                color: "var(--text-muted)",
                 fontWeight: 600,
               }}
             >
@@ -233,9 +252,20 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
                   flex: 1,
                   padding: "14px",
                   borderRadius: 14,
-                  border: "1px solid #D1D5DB",
+                  border: "1px solid var(--border-subtle)",
                   outline: "none",
                   fontSize: 15,
+                background: "var(--bg-primary)",
+                color: "#111827",
+
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.boxShadow = "0 0 0 3px var(--glow-primary)";
+                  e.currentTarget.style.borderColor = "var(--accent-primary)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.borderColor = "var(--border-subtle)";
                 }}
               />
 
@@ -245,9 +275,19 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
                 style={{
                   width: 70,
                   borderRadius: 14,
-                  border: "1px solid #D1D5DB",
-                  background: "#fff",
+                  border: "1px solid var(--border-subtle)",
+                  background: "var(--bg-elevated)",
                   cursor: "pointer",
+                  color: "var(--text-muted)",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  padding: 0,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--bg-hover)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "var(--bg-elevated)";
                 }}
               >
                 {showPw ? "Hide" : "Show"}
@@ -270,30 +310,29 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                color: "#6B7280",
+                color: "var(--text-muted)",
               }}
             >
               <input
                 type="checkbox"
                 checked={rememberMe}
-                onChange={(e) =>
-                  setRememberMe(e.target.checked)
-                }
+                onChange={(e) => setRememberMe(e.target.checked)}
+                style={{ accentColor: "var(--accent-primary)" }}
               />
               Remember me
             </label>
 
-            <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              style={{
-                color: "#7C6AF7",
-                textDecoration: "none",
-                fontWeight: 600,
-              }}
-            >
-              Forgot Password?
-            </a>
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                style={{
+                  color: "var(--accent-primary)",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                }}
+              >
+                Forgot Password?
+              </a>
           </div>
 
           {/* LOGIN */}
@@ -323,7 +362,7 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
             style={{
               textAlign: "center",
               marginTop: 24,
-              color: "#6B7280",
+              color: "var(--text-muted)",
             }}
           >
             Don't have an account?{" "}
@@ -334,7 +373,7 @@ export default function LoginPage({ onLogin, onSwitchToSignup, error }) {
                 onSwitchToSignup();
               }}
               style={{
-                color: "#7C6AF7",
+                color: "var(--accent-primary)",
                 fontWeight: 700,
                 textDecoration: "none",
               }}

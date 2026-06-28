@@ -140,17 +140,18 @@ export default function ChatInput({ onSend, isLoading, hasMessages }) {
           {isLoading ? (
             <div
               style={{
-                width: 16, height: 16,
-                border: "2px solid rgba(255,255,255,0.3)",
-                borderTopColor: "white",
+                width: 16,
+                height: 16,
+                border: "2px solid rgba(255,255,255,0.25)",
+                borderTopColor: "var(--text-inverse)",
                 borderRadius: "50%",
                 animation: "spin 0.8s linear infinite",
               }}
             />
           ) : (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M22 2L11 13" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M22 2L11 13" stroke="var(--text-inverse)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="var(--text-inverse)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           )}
         </button>

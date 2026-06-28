@@ -1,27 +1,29 @@
 /* ===== DESIGN TOKENS ===== */
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #111118;
-  --bg-tertiary: #1a1a24;
-  --bg-elevated: #1e1e2a;
-  --bg-hover: #252533;
+  /* AUTH PAGES MUST ALWAYS BE LIGHT: keep global defaults as light */
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #ffffff;
 
   --accent-primary: #7c6af7;
   --accent-secondary: #56cfb2;
   --accent-warning: #f0a05a;
   --accent-danger: #f06a6a;
 
-  --text-primary: #f0eeff;
-  --text-secondary: #a8a4c8;
-  --text-muted: #6b6880;
+  --text-primary: #1a1530;
+  --text-secondary: #4a4270;
+  --text-muted: #8880aa;
   --text-inverse: #0a0a0f;
 
-  --border-subtle: rgba(124, 106, 247, 0.12);
-  --border-medium: rgba(124, 106, 247, 0.25);
-  --border-strong: rgba(124, 106, 247, 0.5);
+  --border-subtle: rgba(124, 106, 247, 0.15);
+  --border-medium: rgba(124, 106, 247, 0.3);
+  --border-strong: rgba(124, 106, 247, 0.6);
 
-  --glow-primary: 0 0 30px rgba(124, 106, 247, 0.2);
+  --glow-primary: 0 4px 20px rgba(124, 106, 247, 0.15);
   --glow-secondary: 0 0 20px rgba(86, 207, 178, 0.15);
+
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -38,10 +40,11 @@
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Light theme */
-:root { color-scheme: dark; }
-[data-theme="light"] {
+/* Light theme (scoped to authenticated chat only via [data-app-theme]) */
+:root { color-scheme: light; }
+[data-app-theme="light"] {
   color-scheme: light;
+
   --bg-primary: #ffffff;
   --bg-secondary: #ffffff;
   --bg-tertiary: #ffffff;
