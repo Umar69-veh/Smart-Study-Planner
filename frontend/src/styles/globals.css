@@ -39,12 +39,14 @@
 }
 
 /* Light theme */
+:root { color-scheme: dark; }
 [data-theme="light"] {
-  --bg-primary: #f5f4ff;
-  --bg-secondary: #ede9ff;
-  --bg-tertiary: #e4deff;
+  color-scheme: light;
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #ffffff;
   --bg-elevated: #ffffff;
-  --bg-hover: #ede9ff;
+  --bg-hover: #ffffff;
 
   --text-primary: #1a1530;
   --text-secondary: #4a4270;

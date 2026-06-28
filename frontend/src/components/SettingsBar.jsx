@@ -35,35 +35,29 @@ export default function SettingsBar({ settings, onUpdate, disabled }) {
         <span style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "var(--font-display)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
           Level:
         </span>
-        <div style={{ display: "flex", gap: 3 }}>
+        <select
+          value={settings.difficulty}
+          disabled={disabled}
+          onChange={(e) => onUpdate({ difficulty: e.target.value })}
+          style={{
+            background: "var(--bg-tertiary)",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: 20,
+            color: "var(--text-secondary)",
+            padding: "4px 10px",
+            fontSize: 11.5,
+            fontFamily: "var(--font-display)",
+            fontWeight: 600,
+            cursor: disabled ? "not-allowed" : "pointer",
+            outline: "none",
+          }}
+        >
           {DIFFICULTIES.map((d) => (
-            <button
-              key={d.value}
-              disabled={disabled}
-              onClick={() => onUpdate({ difficulty: d.value })}
-              title={d.desc}
-              style={{
-                padding: "4px 10px",
-                borderRadius: 20,
-                border: settings.difficulty === d.value
-                  ? "1px solid var(--accent-primary)"
-                  : "1px solid var(--border-subtle)",
-                background: settings.difficulty === d.value
-                  ? "rgba(124, 106, 247, 0.18)"
-                  : "transparent",
-                color: settings.difficulty === d.value ? "var(--accent-primary)" : "var(--text-muted)",
-                fontSize: 11.5,
-                fontFamily: "var(--font-display)",
-                fontWeight: 600,
-                cursor: disabled ? "not-allowed" : "pointer",
-                transition: "var(--transition)",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <option key={d.value} value={d.value}>
               {d.emoji} {d.label}
-            </button>
+            </option>
           ))}
-        </div>
+        </select>
       </div>
 
       <div style={{ width: 1, height: 20, background: "var(--border-subtle)", flexShrink: 0 }} />

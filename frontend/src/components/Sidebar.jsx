@@ -87,7 +87,7 @@ export default function Sidebar({
             style={{
               width: "100%",
               padding: "9px 14px",
-              background: "linear-gradient(135deg, var(--accent-primary), #9b8fff)",
+              background: "linear-gradient(90deg,#23427C,#34C38F)",
               border: "none",
               borderRadius: "var(--radius-md)",
               color: "white",

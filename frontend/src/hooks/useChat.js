@@ -1,21 +1,31 @@
 import { useState, useCallback, useRef } from "react";
-import { sendMessage, getSessions, getSession, deleteSession } from "../utils/api";
+import {
+  sendMessage,
+  getSessions,
+  getSession,
+  deleteSession,
+} from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 
 export const useChat = () => {
-  const { token, logout, setAuthError } = useAuth();
+  const { token } = useAuth();
+
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [settings, setSettings] = useState({ difficulty: "medium", topic: "General" });
+  const [settings, setSettings] = useState({
+    difficulty: "medium",
+    topic: "General",
+  });
   const [sessionTitle, setSessionTitle] = useState("New Chat");
 
   const abortRef = useRef(null);
 
   const loadSessions = useCallback(async () => {
     if (!token) return;
+
     try {
       const res = await getSessions(token);
       setSessions(res.data || []);
@@ -23,23 +33,32 @@ export const useChat = () => {
       console.error("Failed to load sessions:", err);
       setError(err?.message || String(err));
     }
-  }, []);
+  }, [token]);
 
-  const loadSession = useCallback(async (sessionId) => {
-    if (!token) return;
-    try {
-      const res = await getSession(sessionId, token);
-      const session = res.data;
-      setActiveSessionId(sessionId);
-      setMessages(session.messages || []);
-      setSettings({ difficulty: session.difficulty, topic: session.topic });
-      setSessionTitle(session.title || "Chat");
-      setError(null);
-    } catch (err) {
-      console.error("Failed to load session:", err);
-      setError(err?.message || String(err));
-    }
-  }, []);
+  const loadSession = useCallback(
+    async (sessionId) => {
+      if (!token) return;
+
+      try {
+        const res = await getSession(sessionId, token);
+
+        const session = res.data;
+
+        setActiveSessionId(sessionId);
+        setMessages(session.messages || []);
+        setSettings({
+          difficulty: session.difficulty,
+          topic: session.topic,
+        });
+        setSessionTitle(session.title || "Chat");
+        setError(null);
+      } catch (err) {
+        console.error("Failed to load session:", err);
+        setError(err?.message || String(err));
+      }
+    },
+    [token]
+  );
 
   const startNewChat = useCallback(() => {
     setActiveSessionId(null);
@@ -50,9 +69,16 @@ export const useChat = () => {
 
   const sendChat = useCallback(
     async (text) => {
+      console.log("TOKEN FROM useChat:", token);
+
       if (!text.trim() || isLoading) return;
 
-      const userMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString() };
+      const userMessage = {
+        role: "user",
+        content: text.trim(),
+        timestamp: new Date().toISOString(),
+      };
+
       setMessages((prev) => [...prev, userMessage]);
       setIsLoading(true);
       setError(null);
@@ -66,6 +92,7 @@ export const useChat = () => {
         };
 
         const res = await sendMessage(payload, token);
+
         const { sessionId: newSessionId, response, title } = res.data;
 
         const botMessage = {
@@ -79,29 +106,38 @@ export const useChat = () => {
         if (!activeSessionId) {
           setActiveSessionId(newSessionId);
           setSessionTitle(title || "New Chat");
-          // Refresh sidebar sessions list
-          loadSessions();
-        } else {
-          // Update title if it changed
-          if (title) setSessionTitle(title);
+          await loadSessions();
+        } else if (title) {
+          setSessionTitle(title);
         }
       } catch (err) {
         console.error("Send chat error:", err);
         setError(err?.message || String(err));
-        // Remove the optimistic user message on error
+
+        // remove optimistic message
         setMessages((prev) => prev.slice(0, -1));
       } finally {
         setIsLoading(false);
       }
     },
-    [activeSessionId, isLoading, settings, loadSessions]
+    [
+      activeSessionId,
+      isLoading,
+      settings,
+      loadSessions,
+      token,
+    ]
   );
 
   const removeSession = useCallback(
     async (sessionId) => {
       try {
         await deleteSession(sessionId, token);
-        setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
+
+        setSessions((prev) =>
+          prev.filter((s) => s.sessionId !== sessionId)
+        );
+
         if (activeSessionId === sessionId) {
           startNewChat();
         }
@@ -110,11 +146,14 @@ export const useChat = () => {
         setError(err?.message || String(err));
       }
     },
-    [activeSessionId, startNewChat]
+    [activeSessionId, startNewChat, token]
   );
 
   const updateSettings = useCallback((newSettings) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
+    setSettings((prev) => ({
+      ...prev,
+      ...newSettings,
+    }));
   }, []);
 
   return {

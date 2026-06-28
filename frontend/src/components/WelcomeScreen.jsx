@@ -25,13 +25,17 @@ export default function WelcomeScreen({ onSend }) {
       {/* Hero */}
       <div
         style={{
-          width: 72, height: 72,
-          background: "linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))",
+          width: 72,
+          height: 72,
           borderRadius: 20,
-          display: "flex", alignItems: "center", justifyContent: "center",
+          background: "#ffffff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           fontSize: 36,
           marginBottom: 20,
-          boxShadow: "var(--glow-primary)",
+          boxShadow: "0 15px 40px rgba(0,0,0,.08)",
+          border: "1px solid #e5e7eb",
         }}
       >
         🧠
@@ -41,21 +45,19 @@ export default function WelcomeScreen({ onSend }) {
         style={{
           fontFamily: "var(--font-display)",
           fontSize: 28,
-          fontWeight: 800,
-          letterSpacing: "-0.04em",
+          fontWeight: 600,
+          letterSpacing: "-0.02em",
           textAlign: "center",
           marginBottom: 8,
-          background: "linear-gradient(135deg, var(--text-primary), var(--accent-primary))",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
+          color: "#237541ff",
         }}
       >
-        Your AI Study Partner
+        Welcome to Smart Study Planner
       </h2>
 
       <p
         style={{
-          color: "var(--text-muted)",
+          color: "#6b7280",
           textAlign: "center",
           fontSize: 14,
           maxWidth: 380,
@@ -132,3 +134,4 @@ export default function WelcomeScreen({ onSend }) {
     </div>
   );
 }
+
