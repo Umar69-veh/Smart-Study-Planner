@@ -62,6 +62,28 @@
   --glow-primary: 0 4px 20px rgba(124, 106, 247, 0.15);
 }
 
+/* Dark theme (scoped to authenticated chat only via [data-app-theme]) */
+[data-app-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-primary: #0b0b14;
+  --bg-secondary: #0e0e1a;
+  --bg-tertiary: #121226;
+  --bg-elevated: #151527;
+  --bg-hover: #1a1a33;
+
+  --text-primary: #e9e7ff;
+  --text-secondary: rgba(233, 231, 255, 0.78);
+  --text-muted: rgba(233, 231, 255, 0.6);
+
+  --border-subtle: rgba(124, 106, 247, 0.18);
+  --border-medium: rgba(124, 106, 247, 0.32);
+  --border-strong: rgba(124, 106, 247, 0.6);
+
+  --glow-primary: 0 4px 20px rgba(124, 106, 247, 0.25);
+}
+
+
 /* ===== RESET ===== */
 *, *::before, *::after {
   box-sizing: border-box;

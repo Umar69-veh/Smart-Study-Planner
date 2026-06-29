@@ -70,7 +70,7 @@ function AppInner() {
   if (!user) {
     return (
       <div
-        data-app-theme={theme}
+        data-app-theme="light"
         style={{
           height: "100%",
           minHeight: "100vh",
@@ -284,30 +284,39 @@ function AppInner() {
           </div>
         )}
 
-        <div
-          style={{
-            flex: 1,
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {messages.length === 0 ? (
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {messages.length === 0 ? (
+          <div data-app-theme="light" style={{ height: "100%" }}>
             <WelcomeScreen onSend={sendChat} />
-          ) : (
-            <div style={{ padding: "20px 20px 8px", display: "flex", flexDirection: "column", gap: 16 }}>
-              {messages.map((msg, i) => (
-                <MessageBubble
-                  key={i}
-                  message={msg}
-                  isLatest={i === messages.length - 1}
-                />
-              ))}
-              {isLoading && <TypingIndicator />}
-              <div ref={messagesEndRef} />
-            </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: "20px 20px 8px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+            }}
+          >
+            {messages.map((msg, i) => (
+              <MessageBubble
+                key={i}
+                message={msg}
+                isLatest={i === messages.length - 1}
+              />
+            ))}
+            {isLoading && <TypingIndicator />}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </div>
 
         <ChatInput
           onSend={sendChat}

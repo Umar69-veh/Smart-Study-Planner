@@ -20,11 +20,11 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://smart-study-planner-nine-phi.vercel.app",
+      "https://smart-study-planner-production-032d.up.railway.app",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
-allowedHeaders: ["Content-Type", "Authorization"],
-
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
