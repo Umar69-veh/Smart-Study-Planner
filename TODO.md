@@ -1,6 +1,8 @@
 # TODO
-- [x] Search for places where fontWeight 600 is used in the welcome-related UI.
-- [x] Update WelcomePage heading/pills font weights to reduce emphasis.
-- [x] Update WelcomeScreen heading fontWeight to 600 (avoid unintended syntax issues).
-- [ ] Run frontend build/tests and fix any formatting/syntax errors if present.
+- [x] Make WelcomePage responsive (stack 2-column grid into 1 column on small screens) without affecting other pages
+- [x] Update WelcomePage.jsx to use a CSS class for the grid instead of fixed inline columns
+- [x] Add media queries to frontend/src/styles/responsive.css for the WelcomePage layout
+- [x] Verify in browser at mobile widths (no horizontal overflow, buttons readable)
+
+
 

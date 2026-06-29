@@ -29,7 +29,6 @@ export default function WelcomePage({ onLogin, onSignup, onSend }) {
           maxWidth: 980,
           margin: "0 auto",
           display: "grid",
-          gridTemplateColumns: "1.1fr 0.9fr",
           gap: 24,
           alignItems: "center",
           justifyContent: "center",
